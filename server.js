@@ -26,11 +26,22 @@ const logoRoute = require('./routes/logo');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://hover-shop.s3-website.eu-north-1.amazonaws.com'
+];
+
 app.use(cors({
-  origin: '*', // or restrict to your frontend domain
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
-app.use(bodyParser.json());
+
 
 
 // ✅ All Routes
